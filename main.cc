@@ -14,8 +14,8 @@ int main (int, const char* argv)
    XrdSysLogger myLogger;
    XrdSysError eDest(&myLogger, "tfc_");
    eDest.Say("TFC Module");
-   XrdCmsTfc::TrivialFileCatalog tfc(&eDest, rf);
-   tfc.lfn2pfn(argv[1], buff, blen);
+   XrdCmsJson::PathTranslation cmsJson(&eDest, rf);
+   cmsJson.lfn2pfn(argv[1], buff, blen);
    std::cout << buff << std::endl;
    return 0;
 }
