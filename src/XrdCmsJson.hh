@@ -3,6 +3,8 @@
 
 #include "XrdSys/XrdSysError.hh"
 #include <iostream>
+#include <json/value.h>
+#include <json/json.h>
 
 namespace XrdCmsJson
 {
@@ -26,7 +28,9 @@ private:
     std::string m_filename;
     //std::string m_destination;
     std::string m_url;
+    std::string m_volume;
     std::string m_protocol;
+    Json::Value	m_protocol_json;
 
     XrdSysError *eDest;
 };
