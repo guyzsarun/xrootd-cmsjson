@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sys/param.h>
-#include "src/XrdCmsTfc.hh"
+#include "src/XrdCmsJson.hh"
 #include "XrdSys/XrdSysError.hh"
 #include "XrdSys/XrdSysLogger.hh"
 
