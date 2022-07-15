@@ -1,0 +1,58 @@
+[
+    {  "site": "T2_XX_Test",
+       "volume": "Test_dCache",
+       "protocols": [
+            {   "protocol": "direct",
+                "access": "site-rw",
+                "prefix": "file:///pnfs/my.domain.ch/data/cms"
+            },
+            {   "protocol": "dcap",
+                "access": "global-rw",
+                "prefix": "dcap://cms-se.my.domain.ch/pnfs/my.domain.ch/data/cms"
+            },
+            {   "protocol": "SRMv2",
+                "access": "global-rw",
+                "prefix": "srm://cms-se.my.domain.ch:8443/srm/managerv2?SFN=/pnfs/my.domain.ch/data/cms"
+            },
+            {   "protocol": "srm-local",
+                "access": "global-rw",
+                "prefix": ""
+            },
+            {   "protocol": "WebDAV",
+                "access": "global-rw",
+                "rules": [
+                    {  "lfn": ".*/HCtest/GenericTTbar/(.*)",
+                        "pfn": "root://my.domain.ch:1094/pnfs/domain.ch/data/cms/store/mc/HCtest/GenericTTbar/$1"
+                    },
+                    {  "lfn": "^/+store(.*)",
+                        "pfn": "davs://cms-xrootd.my.domain.ch:2880/$1"
+                    }
+                ]
+            },
+            {   "protocol": "pnfs",
+                "access": "virtual",
+                "rules": [
+                    {  "lfn": "/+store/test/xrootd/T2_XX_Test/store/(.*)",
+                        "pfn": "/pnfs/domain.ch/data/cms/disk/data/store/$1"
+                    },
+                    {  "lfn": "/+(.*)",
+                        "pfn": "/pnfs/domain.ch/data/cms/disk/data/$1"
+                    }
+                ]
+            },
+            {   "protocol": "srm-chain",
+                "access": "global-rw",
+                "rules": [
+                    {  "lfn": "/+(.*)",
+                        "pfn": "srm://my.domain.ch:8443/srm/managerv2?SFN=/$1",
+                        "chain": "pnfs"
+                    }
+                ]
+            }
+       ],
+       "type": "DISK",
+       "rse": "T2_XX_Test",
+       "fts": [ "https://fts3-cms.cern.ch:8446", "https://lcgfts3.gridpp.rl.ac.uk:8446" ]
+    }
+]
+ 

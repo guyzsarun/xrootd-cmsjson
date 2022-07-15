@@ -1,4 +1,4 @@
-#include "XrdCmsTfc.hh"
+#include "XrdCmsJson.hh"
 #include "XrdSys/XrdSysError.hh"
 
 #include <iostream>
@@ -12,43 +12,32 @@
 #define BUFFSIZE 1024
 #define OVECCOUNT 30
 
-using namespace XrdCmsTfc;
+using namespace XrdCmsJson;
 
-XrdCmsTfc::TrivialFileCatalog::TrivialFileCatalog(XrdSysError *lp, const char * tfc_file)
+XrdCmsJson::PathTranslation::PathTranslation(XrdSysError *lp, const char * tfc_file)
 {
     m_url = tfc_file;
     eDest = lp;
     parse();
 }
 
-int XrdCmsTfc::TrivialFileCatalog::parse ()
+int XrdCmsJson::PathTranslation::parse ()
 {
     eDest->Say("Conecting to the catalog ", m_url.c_str());
+    m_filename = m_url.substr(0, m_url.find("?"));
+    m_protocol = m_url.substr(m_url.find("=")+1 ,m_url.length()); 
 
-    if (m_url.find ("file:") != std::string::npos) {
-        // remove file:// -> position : +3 i.e. /root/storage.json?protocol=srm
-        m_url = m_url.erase (0, m_url.find(":") +3 );
-        m_filename = m_url.substr(0, m_url.find("?"));
-        m_protocol = m_url.substr(m_url.find("=")+1 ,m_url.length());
-    } else {
-            eDest->Say("TrivialFileCatalog::connect: Malformed url for file catalog configuration");
-            return XRDCMSTFC_ERR_URL;
-	}
+    if (m_filename.empty() or m_protocol.empty()) {
+        eDest->Say("PathTranslation::connect: Malformed url for file catalog configuration");
+        return XRDCMSJSON_ERR_URL;   
+    }
+
+
     return 0;
 }
 
-int XrdCmsTfc::TrivialFileCatalog::lfn2pfn(const char *lfn, char *buff, int blen)
+int XrdCmsJson::PathTranslation::lfn2pfn(const char *lfn, char *buff, int blen)
 {
-    // Initial conditions
-    if (m_filename.empty()){
-        eDest->Say("The path to the storage.json has not been provided");
-        return XRDCMSTFC_ERR_URL;
-    }
-    if (m_protocol.empty()){
-        eDest->Say("No protocol has been provided");
-        return XRDCMSTFC_ERR_URL;
-    }
-
     std::string tmp_lfn = lfn;
     std::string tmp_pfn = "";
     eDest->Say("LFN to translate: ", tmp_lfn.c_str());
@@ -66,7 +55,7 @@ int XrdCmsTfc::TrivialFileCatalog::lfn2pfn(const char *lfn, char *buff, int blen
                 // If it doesn't use a prefix means that we will need rules
                 if (prot["rules"].empty()){
                     // If there are no prefix no rules -> ERROR
-                    return XRDCMSTFC_ERR_PARSERULE;
+                    return XRDCMSJSON_ERR_PARSERULE;
                 } else {
                     // If there are rules -> check what rule match with the LFN
                     for(const auto& rule : prot["rules"]){
@@ -88,7 +77,7 @@ int XrdCmsTfc::TrivialFileCatalog::lfn2pfn(const char *lfn, char *buff, int blen
                 std::string prefix = prot["prefix"].asString();
                 if (prefix.empty()){
                     eDest->Say("No rule nor prefix specified for ", m_protocol.c_str());
-                    return XRDCMSTFC_ERR_URL;
+                    return XRDCMSJSON_ERR_URL;
                 } else {
                     protocol_found = true;
                     prefix = prefix.append(tmp_lfn.c_str());
@@ -100,7 +89,7 @@ int XrdCmsTfc::TrivialFileCatalog::lfn2pfn(const char *lfn, char *buff, int blen
 
     if (!protocol_found) {
         eDest->Say("The protocol has not been found: ", m_protocol.c_str());
-        return XRDCMSTFC_ERR_NOLFN2PFN;
+        return XRDCMSJSON_ERR_NOLFN2PFN;
     };
 
 
