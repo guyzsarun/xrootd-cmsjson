@@ -24,7 +24,7 @@
                     {  "lfn": ".*/HCtest/GenericTTbar/(.*)",
                         "pfn": "root://my.domain.ch:1094/pnfs/domain.ch/data/cms/store/mc/HCtest/GenericTTbar/$1"
                     },
-                    {  "lfn": "^/+store(.*)",
+                    {  "lfn": "^/+(store.*)",
                         "pfn": "davs://cms-xrootd.my.domain.ch:2880/$1"
                     }
                 ]
