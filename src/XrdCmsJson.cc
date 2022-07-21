@@ -57,7 +57,6 @@ int XrdCmsJson::PathTranslation::parse ()
             Json::Value rules;
             m_protocol_json["protocol"] = prot["protocol"];
             m_protocol_json["access"] = prot["access"];
-            m_protocol_json["rules"] = prot["rules"];
 
 
             if (prot["prefix"].empty() and prot["rules"].empty()){
@@ -70,6 +69,16 @@ int XrdCmsJson::PathTranslation::parse ()
                 std::cout << "PFN 2 json: " << rules.asString() << std::endl;
                 m_protocol_json["rules"] = rules;
             }
+            for(const auto& rule : prot["rules"]){
+                if (!rule["chain"].empty()){
+                    std::string chain_name = rule["chain"];
+                    m_protocol_json["rules"] = actualJson[0]["protocols"][chain_name]["rules"];
+
+                    
+                }else {
+                    m_protocol_json["rules"] = prot["rules"];
+                }
+            
             break;
         }
     }
