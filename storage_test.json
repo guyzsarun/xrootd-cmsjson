@@ -43,6 +43,9 @@
             {   "protocol": "srm-chain",
                 "access": "global-rw",
                 "rules": [
+                    {  "lfn": ".*/HCtest/GenericTTbar/(.*)",
+                        "pfn": "srm://my.domain.ch:8443/pnfs/domain.ch/data/cms/store/mc/HCtest/$1"
+                    },
                     {  "lfn": "/+(.*)",
                         "pfn": "srm://my.domain.ch:8443/srm/managerv2?SFN=/$1",
                         "chain": "pnfs"
