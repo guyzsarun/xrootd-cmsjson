@@ -25,7 +25,8 @@ public:
     int pfn2lfn(const char *pfn, char *buff, int blen);
     int lfn2rfn(const char *lfn, char *buff, int blen);
     int parse();
-
+    int appendRuleJson(std::string lfn, std::string pfn, Json::Value *all_rules);
+    std::string resolveChain(Json::Value rule_chain, Json::Value rule_defined);
 
 private:
     //std::string m_fileType;

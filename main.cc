@@ -10,7 +10,7 @@ int main (int, const char** argv)
    //const char* lfn = "/store/test/14c5c58e-00c2-4660-bf90-a963b86388e1.root";
    int blen = 4096;
    char* buff = (char*) malloc(blen);
-   char rf[] = "file:/root/xrootd-cmsjson/storage_test.json?volume=Test_dCache&protocol=WebDAV";
+   char rf[] = "file:/root/xrootd-cmsjson/storage_test.json?volume=Test_dCache&protocol=srm-chain";
    XrdSysLogger myLogger;
    XrdSysError eDest(&myLogger, "tfc_");
    eDest.Say("TFC Module");
