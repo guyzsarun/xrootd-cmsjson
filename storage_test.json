@@ -22,21 +22,54 @@
                 "access": "global-rw",
                 "rules": [
                     {  "lfn": ".*/HCtest/GenericTTbar/(.*)",
-                        "pfn": "root://my.domain.ch:1094/pnfs/domain.ch/data/cms/store/mc/HCtest/GenericTTbar/$1"
+                        "pfn": "davs://my.domain.ch:1094/pnfs/domain.ch/data/cms/store/mc/HCtest/GenericTTbar/$1"
                     },
                     {  "lfn": "^/+(store.*)",
                         "pfn": "davs://cms-xrootd.my.domain.ch:2880/$1"
                     }
                 ]
             },
+            {   "protocol": "xrd-sub",
+                "access": "virtual",
+                "rules": [
+                    {  "lfn": "/+store/test/xrootd/T2_XX_Test/test/store/(.*)",
+                        "pfn": "/store/test/xrootd/T2_XX_Test/xrd-sub/store/$1"
+                    },
+                    {  "lfn": "/+store/test/xrootd/T2_XX_Test/store/(.*)",
+                        "pfn": "/xrd-sub/store/$1"
+                    }
+                ]
+            },
+            {   "protocol": "xrd",
+                "access": "virtual",
+                "rules": [
+                    {   "chain": "xrd-sub",
+                        "lfn": "/+store/test/xrootd/T2_XX_Test/(.*)",
+                        "pfn": "/store/test/xrootd/xrd/$1"
+                    },
+                    {   "lfn": "/+store/test/xrootd/store/(.*)",
+                        "pfn": "/xrd/store/$1"
+                    },
+                    {   "chain":"xrd-sub",
+                        "lfn": "/+data/T2/test/store/(.*)",
+                        "pfn": "/xrd/store/$1"
+                        
+                    }
+                ]
+            },
             {   "protocol": "pnfs",
                 "access": "virtual",
                 "rules": [
-                    {  "lfn": "/+store/test/xrootd/T2_XX_Test/store/(.*)",
-                        "pfn": "/pnfs/domain.ch/data/cms/disk/data/store/$1"
+                    {  "lfn": "/+store/test/xrootd/(.*)",
+                        "pfn": "/store/test/pnfs/$1",
+                        "chain": "xrd"
+                    },
+                    {  "lfn": "/+disk/store/(.*)",
+                        "pfn": "/pnfs/$1",
+                        "chain": "xrd"
                     },
                     {  "lfn": "/+(.*)",
-                        "pfn": "/pnfs/domain.ch/data/cms/disk/data/$1"
+                        "pfn": "/pnfs/$1"
                     }
                 ]
             },
@@ -44,11 +77,35 @@
                 "access": "global-rw",
                 "rules": [
                     {  "lfn": ".*/HCtest/GenericTTbar/(.*)",
-                        "pfn": "srm://my.domain.ch:8443/pnfs/domain.ch/data/cms/store/mc/HCtest/$1"
+                        "pfn": "srm-chain://my.domain.ch:8443/$1"
                     },
                     {  "lfn": "/+(.*)",
-                        "pfn": "srm://my.domain.ch:8443/srm/managerv2?SFN=/$1",
+                        "pfn": "srm-chain://my.domain.ch/srm/managerv2?SFN=/$1",
                         "chain": "pnfs"
+                    },
+                    {  "lfn": "/+store/unmerged/(.*)",
+                        "pfn": "srm-chain://my.domain.ch/srm/managerv2?SFN=/$1",
+                        "chain": "pnfs"
+                    }
+                ]
+            },
+            {   "protocol": "test-chain",
+                "access": "virtual",
+                "rules": [
+                    {  "lfn": "/+store/test/(.*)",
+                        "pfn": "/store/test_2/$1"
+                    }
+                ]
+            },
+            {   "protocol": "srm-test",
+                "access": "global-rw",
+                "rules": [
+                    {  "lfn": ".*/HCtest/GenericTTbar/(.*)",
+                        "pfn": "srm-test://my.domain.ch:8443/$1"
+                    },
+                    {  "lfn": "/+(.*)",
+                        "pfn": "srm-test://my.domain.ch/$1",
+                        "chain": "test-chain"
                     }
                 ]
             }
@@ -58,4 +115,4 @@
        "fts": [ "https://fts3-cms.cern.ch:8446", "https://lcgfts3.gridpp.rl.ac.uk:8446" ]
     }
 ]
- 
+
