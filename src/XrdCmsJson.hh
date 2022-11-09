@@ -33,6 +33,8 @@ public:
 
     virtual ~PathTranslation (){};
 
+    int testCMSNamespaces();
+
     int lfn2pfn(const char *lfn, char *buff, int blen);
 
     int pfn2lfn(const char *pfn, char *buff, int blen);

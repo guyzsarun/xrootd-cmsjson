@@ -15,10 +15,11 @@ make install
 ## Test manually xrootd-cmsjson
 ```
 $ cd xrootd-cmsjson
-
 $ g++ -g ~/xrootd-cmsjson/main.cc -o ~/output/json.out ~/xrootd-cmsjson/src/XrdCmsJson.cc -I /root/xrootd-json -l jsoncpp -I /usr/include/xrootd -l XrdUtils
 
 $ ~/output/json.out /store/test/14c5c58e-00c2-4660-bf90-a963b86388e1.root
+or
+$ ~/output/json.out "file:/root/xrootd-cmsjson/storage_test.json?volume=Test_dCache&protocol=srm-chain"
 
 ```
 

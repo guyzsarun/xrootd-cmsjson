@@ -33,7 +33,7 @@
                 "access": "virtual",
                 "rules": [
                     {  "lfn": "/+store/test/xrootd/T2_XX_Test/test/store/(.*)",
-                        "pfn": "/store/test/xrootd/T2_XX_Test/xrd-sub/store/$1"
+                        "pfn": "/store/test/xrootd/T1_XX_Test/xrd-sub/store/$1"
                     },
                     {  "lfn": "/+store/test/xrootd/T2_XX_Test/store/(.*)",
                         "pfn": "/xrd-sub/store/$1"

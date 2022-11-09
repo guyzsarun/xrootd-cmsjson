@@ -22,6 +22,7 @@ extern "C"
         eDest->Say("CERN CMS Facilities and Services Site Support"); 
 
         eDest->Say("Params: ", parms);
+
         PathTranslation *myTranslation = new PathTranslation(eDest, parms);
         return myTranslation;
     }
@@ -32,6 +33,12 @@ XrdCmsJson::PathTranslation::PathTranslation(XrdSysError *lp, const char * url_t
     m_url = url_translation;
     eDest = lp;
     parse();
+    //testCMSNamespaces();
+
+}
+
+int XrdCmsJson::PathTranslation::testCMSNamespaces ()
+{
     // Test all "required" paths so site admins can see if there is any wrong configuration 
     for(const auto lfn_area : CMS_ALL_NAMESPACES)
     {
@@ -40,6 +47,7 @@ XrdCmsJson::PathTranslation::PathTranslation(XrdSysError *lp, const char * url_t
         const char* n_lfn =  lfn_area.c_str();
         this->lfn2pfn(n_lfn, buff, blen);
     }
+    return 0;
 }
 
 int XrdCmsJson::PathTranslation::appendRuleJson (std::string lfn, std::string pfn, Json::Value *m_rules)
@@ -108,12 +116,12 @@ Json::Value XrdCmsJson::PathTranslation::simplifyProtocol(Json::Value protocol)
                 std::string lfn_nextrule = protocol["rules"][idx_subrule]["lfn"].asString();
                 std::regex rgx_lfn_nextrule(lfn_nextrule);
                 
-                std::cout << " pro " << protocol["rules"][idx_rule]["lfn"].asString() << "RGX " << lfn_nextrule.c_str() << std::endl;
+                //std::cout << " pro " << protocol["rules"][idx_rule]["lfn"].asString() << "RGX " << lfn_nextrule.c_str() << std::endl;
                 
-                if (regex_match(protocol["rules"][idx_rule]["lfn"].asString(), rgx_lfn_nextrule));
-                {
-                    std::cout << "UNUSED RULE INDEX " << idx_subrule << std::endl;
-                }
+                //if (regex_match(protocol["rules"][idx_rule]["lfn"].asString(), rgx_lfn_nextrule));
+                //{
+                //    std::cout << "UNUSED RULE INDEX " << idx_subrule << std::endl;
+                //}
             }
         }
     
@@ -158,28 +166,37 @@ std::string XrdCmsJson::PathTranslation::matchLFN(Json::Value rule, std::string 
 }
 
 
-Json::Value XrdCmsJson::PathTranslation::parseProtocol(Json::Value protocol, std::string lfn) 
+Json::Value XrdCmsJson::PathTranslation::parseProtocol(Json::Value rules, std::string lfn) 
 {
-    std::string name_chain = protocol["protocol"].asString();
-
-    for( const auto& rule_chain : protocol["rules"])
+    for( const auto& rule : rules)
     {
-        Json::Value new_rule_chain;
-        std::string pfn_init = matchLFN(rule_chain, lfn);
+        Json::Value new_rule;
+        std::string pfn_init = matchLFN(rule, lfn);
         // the rule is chained and the lfn can be resolved (upstream) -> go deeper
-        if (!rule_chain["chain"].empty() && !pfn_init.empty())
+        if (!rule["chain"].empty() && !pfn_init.empty())
         {
-            std::string name_chain2 = rule_chain["chain"].asString();
-            new_rule_chain = parseProtocol(m_json[name_chain2], lfn);
+            std::string name_chain = rule["chain"].asString();
+            new_rule = parseProtocol(m_json[name_chain]["rules"], lfn);
         }
-        if (!new_rule_chain["pfn_chain"].empty())
+        if (!new_rule["pfn_chain"].empty())
         {
-            lfn = new_rule_chain["pfn_chain"].asString();
+            lfn = new_rule["pfn_chain"].asString();
         }
-        std::string pfn_result = matchLFN(rule_chain, lfn);
+        
+        std::string pfn_result = matchLFN(rule, lfn);
+
+        //std::cout << "ALERTA1111!!!! " << rule << "\n" << new_rule << " " << lfn << "\n" << new_rule["pfn_chain"] << "<->" << pfn_result << std::endl;
+
+        if (!new_rule["pfn_chain"].empty() and pfn_result.empty()){
+            //pfn_result = rule["pfn"];
+            Json::Value rule_with_chain = rule;
+            rule_with_chain["pfn_chain"] = rule["pfn"];
+            return rule_with_chain;
+        }
+
         if (!pfn_result.empty())
         {
-            Json::Value rule_with_chain = rule_chain;
+            Json::Value rule_with_chain = rule;
             rule_with_chain["pfn_chain"] = pfn_result;
             return rule_with_chain;
         }
@@ -198,7 +215,7 @@ int XrdCmsJson::PathTranslation::parseUrl()
     m_protocol = m_url.substr(m_url.find("protocol=")+9 ,m_url.length()); 
     m_volume = m_url.substr(m_url.find("volume=")+7 ,m_url.find("&protocol=")-(m_url.find("volume=")+7) );
     
-    std::cout << "Volume " << m_volume << ", protocol " << m_protocol << std::endl;
+    //std::cout << "Volume " << m_volume << ", protocol " << m_protocol << std::endl;
 
     return XRDCMSJSON_OK;
 }
@@ -217,12 +234,21 @@ int XrdCmsJson::PathTranslation::verifyFormatURL()
 // Reformat json to use protocol name as key
 int XrdCmsJson::PathTranslation::reformatJson(Json::Value original_storage)
 {
-    for(const auto& prot : original_storage[0]["protocols"])
+    for (const auto& volume_json : original_storage)
     {
-        std::string protocol_name = prot["protocol"].asString();
-        m_json[protocol_name] = prot;
+        //std::cout << "VOLUME " << volume_json << std::endl;
+        if (volume_json["volume"] == m_volume){
+            
+            for(const auto& prot : volume_json["protocols"])
+            {
+                std::string protocol_name = prot["protocol"].asString();
+                m_json[protocol_name] = prot;
+            }
+            return XRDCMSJSON_OK;
+        }
     }
-    return XRDCMSJSON_OK;
+    eDest->Say("None Volume has matched with the existing ones");
+    return XRDCMSJSON_ERR_JSON;
 }
 
 
@@ -251,25 +277,23 @@ int XrdCmsJson::PathTranslation::verifyFormatJson()
 // Parse and verify protocol data and store clean information inside m_rules
 int XrdCmsJson::PathTranslation::parse()
 {
-
     parseUrl();
     verifyFormatURL();
-
     parseStorageJson();
     verifyFormatJson();
     verifyFormatProtocol(m_json[m_protocol]);
-    //Json::Value prot = simplifyProtocol(m_json[m_protocol]);
-    //Json::Value r_all_rules = parseProtocol(m_json[m_protocol]);    
-    // PREFIX
+    
+    // If it is a prefix, we transform it to a rule format
     if (!m_json[m_protocol]["prefix"].empty())
     {
         Json::Value rule_pfx = parsePrefix(m_json[m_protocol]["prefix"].asString());
-        // Prefix put in "rule format"
         m_rules.append(rule_pfx);
     } else 
     {
         m_rules = m_json[m_protocol]["rules"];
     }
+
+    //std::cout << "RULES " << m_rules << std::endl;
     
     return XRDCMSJSON_OK;
 }
@@ -277,7 +301,6 @@ int XrdCmsJson::PathTranslation::parse()
 int XrdCmsJson::PathTranslation::lfn2pfn(const char *lfn, char *buff, int blen)
 {
     std::string target_lfn = lfn;
-
     eDest->Say("LFN to translate: ", target_lfn.c_str());
 
     // First checks
@@ -288,33 +311,27 @@ int XrdCmsJson::PathTranslation::lfn2pfn(const char *lfn, char *buff, int blen)
         return XRDCMSJSON_ERR_FORMAT;
     }
     bool rule_found = false;
-    for(const auto& rule : m_rules)
-    {
-        std::regex lfn_expr (rule["lfn"].asString());
-        if (!rule["chain"].empty())
-        {
-            std::string chain_name = rule["chain"].asString();
-            Json::Value rule_chain = parseProtocol(m_json[chain_name], target_lfn.c_str());
-            if (!rule_chain["pfn_chain"].empty())
-            {
-                Json::Value lfn_result_chain = rule_chain["pfn_chain"].asString();
-                target_lfn = lfn_result_chain.asString();
-            }
-        }
-        std::string pfn_result = matchLFN(rule, target_lfn);
 
-        if (!pfn_result.empty())
-        {
-            std::cout << "Final Result: " <<  pfn_result << std::endl;
-            return XRDCMSJSON_OK;
-        }
-    };
+    // We treat prefix, rules and chains the same way
+    Json::Value rule_result = parseProtocol(m_rules, target_lfn.c_str());
 
-    if (!rule_found) 
+    // If it is using a chain, the LFN will be the last LFN downstream
+    std::string pfn_result;
+
+    if (!rule_result["pfn_chain"].empty())
     {
-        eDest->Say("None rule match with the LFN: ", target_lfn.c_str());
-        return XRDCMSJSON_ERR_DATAMISSING;
-    };
+        //std::string target_lfn = rule_result["pfn_chain"].asString();
+        pfn_result = rule_result["pfn_chain"].asString();
+    }else {
+        pfn_result = matchLFN(rule_result, target_lfn);
+    }
+
+    if (!pfn_result.empty())
+    {
+        eDest->Say("Final Result: ", pfn_result.c_str());
+        std::cout << pfn_result.c_str() << std::endl;
+        return XRDCMSJSON_OK;
+    }
 
 }
 
