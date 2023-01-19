@@ -13,6 +13,8 @@ make install
 ```
 
 ## Test manually xrootd-cmsjson
+Ref: https://github.com/opensciencegrid/xrootd-cmstfc
+
 ```
 $ cd xrootd-cmsjson
 $ g++ -g ~/xrootd-cmsjson/main.cc -o ~/output/json.out ~/xrootd-cmsjson/src/XrdCmsJson.cc -I /root/xrootd-json -l jsoncpp -I /usr/include/xrootd -l XrdUtils
