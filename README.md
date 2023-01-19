@@ -36,7 +36,7 @@ Ref: https://github.com/opensciencegrid/xrootd-cmstfc
 ```
 $ g++ -g xml_main.cc -o ~/output/test.out ~/xrootd-cmstfc/src/XrdCmsTfc.cc -I /usr/include/xrootd -I ~/xrootd-cmstfc -l xerces-c-3.2 -l XrdUtils -l pcre
 
-$ ./output/test.out
+$ ./output/test.out file:///root/xrootd-cmstfc/storage.xml?protocol=srm-chain
 
 ```
 
