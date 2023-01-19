@@ -32,10 +32,40 @@ pfn: srm://my.domain.ch/srm/managerv2?SFN=/pnfs/domain.ch/xrootd/disk/data/T2/st
 ## Test manually xrootd-cmstfc
 
 ```
-$ g++ -g xml_main.cc -o ~/output/test.out ~/xrootd-cmstfc/src/XrdCmsTfc.cc -I /usr/include/xrootd -I /root/xrootd-cmstfc -l xerces-c-3.2 -l XrdUtils -l pcre
+$ g++ -g xml_main.cc -o ~/output/test.out ~/xrootd-cmstfc/src/XrdCmsTfc.cc -I /usr/include/xrootd -I ~/xrootd-cmstfc -l xerces-c-3.2 -l XrdUtils -l pcre
 
 $ ./output/test.out
 
+```
+
+xml_main.cc
+
+```
+#include <iostream>
+#include <sys/param.h>
+#include "src/XrdCmsTfc.hh"
+#include "XrdSys/XrdSysError.hh"
+#include "XrdSys/XrdSysLogger.hh"
+
+
+int main (int, const char** argv)
+{
+   const char* lfn = "/store/test/xrootd/T2_XX_Test/test/store/14c5c58e-00c2-4660-bf90-a963b86388e1.root";
+   //const char* lfn = argv[1];
+
+   //char rf[] = "file:///root/xrootd-cmstfc/storage.xml?protocol=srm-chain";
+   const char *rf = argv[1];
+
+   int blen = 4096;
+   char* buff = (char*) malloc(blen);
+   XrdSysLogger myLogger;
+   XrdSysError eDest(&myLogger, "tfc_");
+   eDest.Say("TFC Module");
+   XrdCmsTfc::TrivialFileCatalog tfc(&eDest, rf);
+   tfc.lfn2pfn(lfn, buff, blen);
+   std::cout << buff << std::endl;
+   return 0;
+}
 ```
 
 ## Test storage.xml in cmssw

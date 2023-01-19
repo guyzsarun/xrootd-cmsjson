@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 protocol_json='XRootD'
-protocol_xml="xrootd"
+protocol_xml="eos"
 
 for site in $(ls /root/SITECONF | grep "^T.*");
 do
