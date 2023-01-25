@@ -19,9 +19,7 @@ Ref: https://github.com/opensciencegrid/xrootd-cmstfc
 $ cd xrootd-cmsjson
 $ g++ -g ~/xrootd-cmsjson/main.cc -o ~/output/json.out ~/xrootd-cmsjson/src/XrdCmsJson.cc -I /root/xrootd-json -l jsoncpp -I /usr/include/xrootd -l XrdUtils
 
-$ ~/output/json.out /store/test/14c5c58e-00c2-4660-bf90-a963b86388e1.root
-or
-$ ~/output/json.out "file:/root/xrootd-cmsjson/storage_test.json?volume=Test_dCache&protocol=srm-chain"
+$ ~/output/json.out /store/test/14c5c58e-00c2-4660-bf90-a963b86388e1.root 'file:/root/xrootd-cmsjson/storage_test.json?volume=Test_dCache&protocol=srm-chain'
 
 ```
 
@@ -34,9 +32,9 @@ pfn: srm://my.domain.ch/srm/managerv2?SFN=/pnfs/domain.ch/xrootd/disk/data/T2/st
 ## Test manually xrootd-cmstfc
 
 ```
-$ g++ -g xml_main.cc -o ~/output/test.out ~/xrootd-cmstfc/src/XrdCmsTfc.cc -I /usr/include/xrootd -I ~/xrootd-cmstfc -l xerces-c-3.2 -l XrdUtils -l pcre
+$ g++ -g ~/xrootd-cmstfc/main.cc -o ~/output/xml.out ~/xrootd-cmstfc/src/XrdCmsTfc.cc -I /usr/include/xrootd -I ~/xrootd-cmstfc -l xerces-c-3.2 -l XrdUtils -l pcre
 
-$ ./output/test.out
+$ ./output/xml.out /store/test/14c5c58e-00c2-4660-bf90-a963b86388e1.root 'file:/root/xrootd-cmsjson/storage_test.json?volume=Test_dCache&protocol=srm-chain'
 
 ```
 
@@ -52,11 +50,8 @@ xml_main.cc
 
 int main (int, const char** argv)
 {
-   const char* lfn = "/store/test/xrootd/T2_XX_Test/test/store/14c5c58e-00c2-4660-bf90-a963b86388e1.root";
-   //const char* lfn = argv[1];
-
-   //char rf[] = "file:///root/xrootd-cmstfc/storage.xml?protocol=srm-chain";
-   const char *rf = argv[1];
+   const char* lfn = argv[1];
+   const char *rf = argv[2];
 
    int blen = 4096;
    char* buff = (char*) malloc(blen);

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 protocol_json='XRootD'
-protocol_xml="eos"
+protocol_xml="xrootd"
 
 for site in $(ls /root/SITECONF | grep "^T.*");
 do
@@ -20,7 +20,7 @@ do
 
     echo -e "#### TFC ####" >> test.txt
     if grep --quiet $protocol_xml /root/SITECONF/$site/PhEDEx/storage.xml; then
-        ~/output/test.out "file:/root/SITECONF/$site/PhEDEx/storage.xml?protocol=$protocol_xml" >> test.txt
+        ~/output/xml.out "file:/root/SITECONF/$site/PhEDEx/storage_disk.xml?protocol=$protocol_xml" >> test.txt
     fi
 
 done
