@@ -13,7 +13,6 @@ make install
 ```
 
 ## Test manually xrootd-cmsjson
-Ref: https://github.com/opensciencegrid/xrootd-cmstfc
 
 ```
 $ cd xrootd-cmsjson
@@ -30,6 +29,7 @@ pfn: srm://my.domain.ch/srm/managerv2?SFN=/pnfs/domain.ch/xrootd/disk/data/T2/st
 
 
 ## Test manually xrootd-cmstfc
+Ref: https://github.com/opensciencegrid/xrootd-cmstfc
 
 ```
 $ g++ -g ~/xrootd-cmstfc/main.cc -o ~/output/xml.out ~/xrootd-cmstfc/src/XrdCmsTfc.cc -I /usr/include/xrootd -I ~/xrootd-cmstfc -l xerces-c-3.2 -l XrdUtils -l pcre
