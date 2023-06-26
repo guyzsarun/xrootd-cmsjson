@@ -1,6 +1,6 @@
 
 cmake_minimum_required( VERSION 2.6 )
-project( xrootd-cmstfc )
+project( xrootd-cmsjson )
 
 set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
@@ -19,25 +19,24 @@ endif()
 include_directories( "${PROJECT_SOURCE_DIR}" "${XROOTD_INCLUDES}"
 "${XERCES_INCLUDES}" "${PCRE_INCLUDES}" )
 
-add_library( XrdCmsTfc MODULE src/XrdCmsTfc.cc src/XrdCmsTfc.hh )
-target_link_libraries(XrdCmsTfc ${XROOTD_UTILS} ${XERCES_LIB} ${PCRE_LIB})
+add_library( XrdCmsJson MODULE src/XrdCmsJson.cc src/XrdCmsJson.hh )
+target_link_libraries(XrdCmsJson ${XROOTD_UTILS} ${XERCES_LIB} ${PCRE_LIB})
 
 if (NOT DEFINED CMAKE_INSTALL_LIBDIR)
   SET(CMAKE_INSTALL_LIBDIR "lib")
 endif()
 
 install(
-  TARGETS XrdCmsTfc
+  TARGETS XrdCmsJson
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
 install(
-  FILES ${CMAKE_SOURCE_DIR}/src/XrdCmsTfc.hh
+  FILES ${CMAKE_SOURCE_DIR}/src/XrdCmsJson.hh
   DESTINATION include )
 
 set_target_properties(
-  XrdCmsTfc
+  XrdCmsJson
   PROPERTIES
   VERSION   "0.0.1"
   SOVERSION "0"
   LINK_INTERFACE_LIBRARIES "" )
-
