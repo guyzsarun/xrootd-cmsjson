@@ -19,7 +19,7 @@ extern "C"
     XrdOucName2Name *XrdOucgetName2Name(XrdSysError *eDest, const char *confg,
         const char *parms, const char *lroot, const char *rroot)
     {
-        eDest->Say("CERN CMS Facilities and Services Site Support"); 
+        eDest->Say("CERN CMS Facilities and Services Site Support");
 
         eDest->Say("Params: ", parms);
 
@@ -39,7 +39,7 @@ XrdCmsJson::PathTranslation::PathTranslation(XrdSysError *lp, const char * url_t
 
 int XrdCmsJson::PathTranslation::testCMSNamespaces ()
 {
-    // Test all "required" paths so site admins can see if there is any wrong configuration 
+    // Test all "required" paths so site admins can see if there is any wrong configuration
     for(const auto lfn_area : CMS_ALL_NAMESPACES)
     {
         int blen = 4096;
@@ -84,7 +84,7 @@ std::string XrdCmsJson::PathTranslation::resolveChain(Json::Value rule_root, Jso
     return pfn_resolved;
 }
 
-Json::Value XrdCmsJson::PathTranslation::parseChain(Json::Value rule_root, Json::Value rule_chain) 
+Json::Value XrdCmsJson::PathTranslation::parseChain(Json::Value rule_root, Json::Value rule_chain)
 {
     // CHAINED
     std::string pfn_resolved = resolveChain(rule_root, rule_chain);
@@ -93,17 +93,17 @@ Json::Value XrdCmsJson::PathTranslation::parseChain(Json::Value rule_root, Json:
 
 }
 
-int XrdCmsJson::PathTranslation::verifyFormatRule(Json::Value rule) 
+int XrdCmsJson::PathTranslation::verifyFormatRule(Json::Value rule)
 {
     if (rule["lfn"].empty() or rule["pfn"].empty())
     {
         eDest->Say("Rule doesn't have PFN or LFN ");
         return XRDCMSJSON_ERR_RULE;
     }
-    return XRDCMSJSON_OK;   
+    return XRDCMSJSON_OK;
 }
 
-Json::Value XrdCmsJson::PathTranslation::simplifyProtocol(Json::Value protocol) 
+Json::Value XrdCmsJson::PathTranslation::simplifyProtocol(Json::Value protocol)
 {
     // If the upper rule includes the lower ones, they will never be used --> trigger alarm
     if (!protocol["rules"].empty())
@@ -111,26 +111,26 @@ Json::Value XrdCmsJson::PathTranslation::simplifyProtocol(Json::Value protocol)
         int num_rules = protocol["rules"].size();
         for( int idx_rule = 0; idx_rule < num_rules; idx_rule++)
         {
-            for (int idx_subrule = idx_rule+1; idx_subrule < num_rules; idx_subrule++) 
+            for (int idx_subrule = idx_rule+1; idx_subrule < num_rules; idx_subrule++)
             {
                 std::string lfn_nextrule = protocol["rules"][idx_subrule]["lfn"].asString();
                 std::regex rgx_lfn_nextrule(lfn_nextrule);
-                
+
                 //std::cout << " pro " << protocol["rules"][idx_rule]["lfn"].asString() << "RGX " << lfn_nextrule.c_str() << std::endl;
-                
+
                 //if (regex_match(protocol["rules"][idx_rule]["lfn"].asString(), rgx_lfn_nextrule));
                 //{
                 //    std::cout << "UNUSED RULE INDEX " << idx_subrule << std::endl;
                 //}
             }
         }
-    
+
     }
     return protocol;
 }
 
 
-int XrdCmsJson::PathTranslation::verifyFormatProtocol(Json::Value prot) 
+int XrdCmsJson::PathTranslation::verifyFormatProtocol(Json::Value prot)
 {
     //std::cout << "Protocol " << m_protocol << " with access: " << m_json[m_protocol]["access"].asString() << std::endl;
 
@@ -138,7 +138,7 @@ int XrdCmsJson::PathTranslation::verifyFormatProtocol(Json::Value prot)
     {
         eDest->Say("No rule nor prefix specified for ");
         return XRDCMSJSON_ERR_PROTOCOL;
-    } 
+    }
 
     return XRDCMSJSON_OK;
 }
@@ -154,7 +154,7 @@ Json::Value XrdCmsJson::PathTranslation::parsePrefix(std::string pfn)
 std::string XrdCmsJson::PathTranslation::matchLFN(Json::Value rule, std::string target_lfn)
 {
         std::string pfn;
-        std::regex lfn_expr (rule["lfn"].asString());
+        std::regex lfn_expr(rule["lfn"].asString() == "(.*)" ? "(.+)" :rule["lfn"].asString());
         if (regex_match (target_lfn.c_str(),lfn_expr))
         {
             // If the rule match with our LFN -> create the PFN
@@ -166,7 +166,7 @@ std::string XrdCmsJson::PathTranslation::matchLFN(Json::Value rule, std::string 
 }
 
 
-Json::Value XrdCmsJson::PathTranslation::parseProtocol(Json::Value rules, std::string lfn) 
+Json::Value XrdCmsJson::PathTranslation::parseProtocol(Json::Value rules, std::string lfn)
 {
     for( const auto& rule : rules)
     {
@@ -182,7 +182,7 @@ Json::Value XrdCmsJson::PathTranslation::parseProtocol(Json::Value rules, std::s
         {
             lfn = new_rule["pfn_chain"].asString();
         }
-        
+
         std::string pfn_result = matchLFN(rule, lfn);
 
         //std::cout << "ALERTA1111!!!! " << rule << "\n" << new_rule << " " << lfn << "\n" << new_rule["pfn_chain"] << "<->" << pfn_result << std::endl;
@@ -207,28 +207,29 @@ Json::Value XrdCmsJson::PathTranslation::parseProtocol(Json::Value rules, std::s
 }
 
 
-int XrdCmsJson::PathTranslation::parseUrl() 
+int XrdCmsJson::PathTranslation::parseUrl()
 {
     eDest->Say("Conecting to the catalog ", m_url.c_str());
     // TODO: CHANGE 5 -> REMOVE file:
     m_filename = m_url.substr(5, m_url.find("?")-5);
-    m_protocol = m_url.substr(m_url.find("protocol=")+9 ,m_url.length()); 
+    m_protocol = m_url.substr(m_url.find("protocol=")+9 ,m_url.length());
     m_volume = m_url.substr(m_url.find("volume=")+7 ,m_url.find("&protocol=")-(m_url.find("volume=")+7) );
-    
+
     //std::cout << "Volume " << m_volume << ", protocol " << m_protocol << std::endl;
 
     return XRDCMSJSON_OK;
 }
 
-int XrdCmsJson::PathTranslation::verifyFormatURL() 
+int XrdCmsJson::PathTranslation::verifyFormatURL()
 {
     // TODO: check site (if none --> the one defined on the site)
 
-    if (m_filename.empty() or m_protocol.empty()) 
+    if (m_filename.empty() or m_protocol.empty())
     {
         eDest->Say("PathTranslation::connect: Malformed url for file catalog configuration");
-        return XRDCMSJSON_ERR_URL;   
+        return XRDCMSJSON_ERR_URL;
     }
+    return XRDCMSJSON_OK;
 }
 
 // Reformat json to use protocol name as key
@@ -238,7 +239,7 @@ int XrdCmsJson::PathTranslation::reformatJson(Json::Value original_storage)
     {
         //std::cout << "VOLUME " << volume_json << std::endl;
         if (volume_json["volume"] == m_volume){
-            
+
             for(const auto& prot : volume_json["protocols"])
             {
                 std::string protocol_name = prot["protocol"].asString();
@@ -263,12 +264,12 @@ int XrdCmsJson::PathTranslation::parseStorageJson()
     return XRDCMSJSON_OK;
 }
 
-int XrdCmsJson::PathTranslation::verifyFormatJson() 
+int XrdCmsJson::PathTranslation::verifyFormatJson()
 {
     if (m_json.empty())
     {
         eDest->Say("The storage.json is empty or the path is incorrect. Information has not ben loaded");
-        return XRDCMSJSON_ERR_JSON; 
+        return XRDCMSJSON_ERR_JSON;
     }
 
     return XRDCMSJSON_OK;
@@ -282,19 +283,19 @@ int XrdCmsJson::PathTranslation::parse()
     parseStorageJson();
     verifyFormatJson();
     verifyFormatProtocol(m_json[m_protocol]);
-    
+
     // If it is a prefix, we transform it to a rule format
     if (!m_json[m_protocol]["prefix"].empty())
     {
         Json::Value rule_pfx = parsePrefix(m_json[m_protocol]["prefix"].asString());
         m_rules.append(rule_pfx);
-    } else 
+    } else
     {
         m_rules = m_json[m_protocol]["rules"];
     }
 
     //std::cout << "RULES " << m_rules << std::endl;
-    
+
     return XRDCMSJSON_OK;
 }
 
@@ -310,7 +311,6 @@ int XrdCmsJson::PathTranslation::lfn2pfn(const char *lfn, char *buff, int blen)
         eDest->Say("You need to use the CMS namespace '/store/...'");
         return XRDCMSJSON_ERR_FORMAT;
     }
-    bool rule_found = false;
 
     // We treat prefix, rules and chains the same way
     Json::Value rule_result = parseProtocol(m_rules, target_lfn.c_str());
@@ -332,16 +332,16 @@ int XrdCmsJson::PathTranslation::lfn2pfn(const char *lfn, char *buff, int blen)
         std::cout << pfn_result.c_str() << std::endl;
         return XRDCMSJSON_OK;
     }
-
+    return XRDCMSJSON_OK;
 }
 
-int XrdCmsJson::PathTranslation::pfn2lfn(const char *pfn, char *buff, int blen) 
+int XrdCmsJson::PathTranslation::pfn2lfn(const char *pfn, char *buff, int blen)
 {
    return XRDCMSJSON_OK;
 }
 
 
-int XrdCmsJson::PathTranslation::lfn2rfn(const char *pfn, char *buff, int blen) 
+int XrdCmsJson::PathTranslation::lfn2rfn(const char *pfn, char *buff, int blen)
 {
     return XRDCMSJSON_OK;
 }
