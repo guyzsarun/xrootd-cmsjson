@@ -34,7 +34,7 @@ RUN yum install -y  xrootd \
                     python3-xrootd \
                     xrootd-devel
 
-RUN mkdir libs
+RUN mkdir -p libs
 RUN git clone https://github.com/open-source-parsers/jsoncpp.git ./libs/jsoncpp
 RUN mkdir -p ./libs/jsoncpp/build && cd ./libs/jsoncpp/build && cmake -DBUILD_STATIC_LIBS=ON  .. && make && make install
 
