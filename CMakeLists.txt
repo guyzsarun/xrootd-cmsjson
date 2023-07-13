@@ -1,12 +1,11 @@
 
-cmake_minimum_required( VERSION 2.6 )
+cmake_minimum_required( VERSION 3.11 )
 project( xrootd-cmsjson )
 
 set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
 find_package( Xrootd REQUIRED )
-find_package( XercesC REQUIRED )
-find_package( Pcre REQUIRED )
+find_package( jsoncpp REQUIRED )
 
 if( CMAKE_COMPILER_IS_GNUCXX )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror" )
@@ -16,11 +15,14 @@ if( CMAKE_COMPILER_IS_GNUCC )
   set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror" )
 endif()
 
-include_directories( "${PROJECT_SOURCE_DIR}" "${XROOTD_INCLUDES}"
-"${XERCES_INCLUDES}" "${PCRE_INCLUDES}" )
+include_directories( "${PROJECT_SOURCE_DIR}" "${XROOTD_INCLUDES}")
 
-add_library( XrdCmsJson MODULE src/XrdCmsJson.cc src/XrdCmsJson.hh )
-target_link_libraries(XrdCmsJson ${XROOTD_UTILS} ${XERCES_LIB} ${PCRE_LIB})
+add_library( XrdCmsJson MODULE src/XrdCmsJson.cc src/XrdCmsJson.hh)
+target_link_libraries(XrdCmsJson ${XROOTD_UTILS} jsoncpp)
+
+add_executable( out.out  src/XrdCmsJson.cc src/XrdCmsJson.hh main.cc)
+target_link_libraries(out.out ${XROOTD_UTILS} jsoncpp_lib)
+
 
 if (NOT DEFINED CMAKE_INSTALL_LIBDIR)
   SET(CMAKE_INSTALL_LIBDIR "lib")
