@@ -1,0 +1,24 @@
+
+FIND_PATH(JSONCPP_INCLUDES json.h
+  HINTS
+  ${JSONCPP_DIR}
+  $ENV{JSONCPP_DIR}
+  /usr
+  /opt/jsoncpp/
+  PATH_SUFFIXES include/json
+  PATHS /opt/json
+)
+
+
+FIND_LIBRARY(JSONCPP_LIBRARIES jsoncpp
+  HINTS
+  ${JSONCPP_DIR}
+  $ENV{JSONCPP_DIR}
+  /usr
+  /opt/jsoncpp/
+  PATH_SUFFIXES lib
+)
+
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Jsoncpp DEFAULT_MSG JSONCPP_LIBRARIES JSONCPP_INCLUDES)
+
