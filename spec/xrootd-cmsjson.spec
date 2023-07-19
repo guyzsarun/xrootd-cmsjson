@@ -11,8 +11,8 @@ URL: https://github.com/bbockelm/xrootd-cmsjson
 # git-archive master | gzip -7 > ~/rpmbuild/SOURCES/xrootd-lcmaps.tar.gz
 Source0: %{name}.tar.gz
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-BuildRequires: cmake jsoncpp-devel
-Requires: /usr/bin/xrootd jsoncpp
+BuildRequires: cmake jsoncpp-devel >= 1.9.4
+Requires: /usr/bin/xrootd, jsoncpp >= 1.9.4
 
 %package devel
 Summary: Development headers and libraries for Xrootd CMSjson plugin
@@ -40,7 +40,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%{_libdir}/libXrdCmsJson.so.*
 %{_libdir}/libXrdCmsJson.so
 
 %files devel
