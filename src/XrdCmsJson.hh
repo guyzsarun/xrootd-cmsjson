@@ -10,20 +10,20 @@
 namespace XrdCmsJson
 {
 /**
- *        @class PathTranslation 
- *          	This class is the concrete implementation of the 
+ *        @class PathTranslation
+ *          	This class is the concrete implementation of the
  *          	CMS Path Translation as implemented by 4Quarks
  *              The adoptation was then done for Xrd to be a Name2Name module.
  *       @Author: 4Quarks
  */
 
-# define XRDCMSJSON_OK 0
-# define XRDCMSJSON_ERR_DATAMISSING 1 //info is missing
-# define XRDCMSJSON_ERR_FORMAT 2 // info is incorrect
-# define XRDCMSJSON_ERR_URL 3
-# define XRDCMSJSON_ERR_JSON 4
-# define XRDCMSJSON_ERR_PROTOCOL 5
-# define XRDCMSJSON_ERR_RULE 6
+#define XRDCMSJSON_OK 0
+#define XRDCMSJSON_ERR_DATAMISSING 1 //info is missing
+#define XRDCMSJSON_ERR_FORMAT 2 // info is incorrect
+#define XRDCMSJSON_ERR_URL 3
+#define XRDCMSJSON_ERR_JSON 4
+#define XRDCMSJSON_ERR_PROTOCOL 5
+#define XRDCMSJSON_ERR_RULE 6
 
 
 class PathTranslation : public XrdOucName2Name
@@ -60,7 +60,7 @@ public:
     int verifyFormatURL();
 
     int verifyFormatProtocol(Json::Value prot);
-    
+
     Json::Value simplifyProtocol(Json::Value prot);
 
     Json::Value parseProtocol(Json::Value protocol, std::string lfn);
@@ -102,7 +102,7 @@ private:
         "/store/user/",
         "/store/user/rucio/",
         "/store/group/",
-        "/store/group/rucio/", 
+        "/store/group/rucio/",
         "/store/test/xrootd/",
         "/store/test/loadtest/"
     };
