@@ -1,8 +1,10 @@
-
-cmake_minimum_required( VERSION 3.11 )
+cmake_minimum_required( VERSION 3.1 )
 project( xrootd-cmsjson )
 
 set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package( Xrootd REQUIRED )
 find_package( Jsoncpp REQUIRED )
@@ -27,7 +29,7 @@ target_link_libraries(test.out ${XROOTD_UTILS} ${JSONCPP_LIBRARIES})
 
 
 if (NOT DEFINED CMAKE_INSTALL_LIBDIR)
-  SET(CMAKE_INSTALL_LIBDIR "lib")
+  SET(CMAKE_INSTALL_LIBDIR "lib64")
 endif()
 
 install(
