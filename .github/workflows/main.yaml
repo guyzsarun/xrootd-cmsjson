@@ -27,7 +27,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/release'
     needs: build-base
     steps:
       - name: Check out Git repository
