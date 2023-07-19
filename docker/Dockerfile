@@ -1,4 +1,4 @@
-FROM xrootd-base-image:latest
+FROM ghcr.io/guyzsarun/xrootd-cmsjson:base
 LABEL org.opencontainers.image.source https://github.com/guyzsarun/xrootd-cmsjson
 
 COPY . .
