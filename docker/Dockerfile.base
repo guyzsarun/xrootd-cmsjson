@@ -1,5 +1,6 @@
 FROM almalinux:8
 MAINTAINER Sarun Nuntaviriyakul <sarun.nuntaviriyakul@cern.ch>
+LABEL org.opencontainers.image.source https://github.com/guyzsarun/xrootd-cmsjson
 
 WORKDIR /xrootd
 
