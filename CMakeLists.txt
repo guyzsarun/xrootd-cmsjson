@@ -2,23 +2,10 @@ cmake_minimum_required( VERSION 3.1 )
 project( xrootd-cmsjson )
 
 set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package( Xrootd REQUIRED )
 find_package( Jsoncpp REQUIRED )
 
-if( CMAKE_COMPILER_IS_GNUCXX )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror" )
-endif()
-
-if( CMAKE_COMPILER_IS_GNUCC )
-  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror" )
-endif()
-
-
-message("JSONCPP INCLUDE - ${JSONCPP_INCLUDES} - ${XROOTD_UTILS} - ${JSONCPP_LIBRARIES}" )
 include_directories( "${PROJECT_SOURCE_DIR}" "${XROOTD_INCLUDES}" "${JSONCPP_INCLUDES}")
 
 add_library( XrdCmsJson MODULE src/XrdCmsJson.cc src/XrdCmsJson.hh)

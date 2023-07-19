@@ -249,8 +249,9 @@ int XrdCmsJson::PathTranslation::parseStorageJson()
     // Load json
     std::ifstream file(m_filename);
     Json::Value storageJson;
-    Json::Reader reader;
-    reader.parse( file, storageJson);
+    Json::CharReaderBuilder jsonReader;
+    std::string errs;
+    Json::parseFromStream(jsonReader, file, &storageJson, &errs);
     reformatJson(storageJson);
     return XRDCMSJSON_OK;
 }
