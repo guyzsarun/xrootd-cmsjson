@@ -23,8 +23,7 @@ jobs:
           tags: ${{ env.TEST_TAG }}
 
       - name: test
-        container:
-          image: ${{ env.TEST_TAG }}
+        uses: ${{ env.TEST_TAG }}
         run: |
             ls
 
