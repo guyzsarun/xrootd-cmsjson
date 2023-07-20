@@ -1,0 +1,83 @@
+[
+    {  "site": "T0_CH_CERN",
+        "volume": "TEST_JSON",
+           "protocols": [
+               {
+                "protocol": "root",
+                 "access": "virtual",
+                 "rules": [
+                    {
+                        "lfn" : "/store/temp/(.*)",
+                        "pfn": "/store/$1"
+                    }
+                ]
+               },
+               {
+                "protocol": "prefix",
+               "access": "virtual",
+               "comment": "path translations for CMS xrootd module",
+               "prefix": "root://cern-vm//cms"
+             }
+             ]
+    },
+    {
+        "site": "T2_CH_CERN",
+        "volume": "CMSSST_TEST",
+        "protocols": [
+            {
+                "protocol": "first",
+                "access": "virtual",
+                "rules": [
+                    {
+                        "lfn": "/+other/(.*)",
+                        "pfn": "/store/other/first/$1/trailer"
+                    },
+                    {
+                        "lfn": "/+store/(.*)",
+                        "pfn": "/store/first/$1/trailer"
+                    },
+                    {
+                        "lfn": "/*store/(.*)",
+                        "pfn": "never/first/$1/trailer"
+                    }
+                ]
+            },
+            {
+                "protocol": "second",
+                "access": "virtual",
+                "rules": [
+                    {
+                        "lfn": "/+test/(.*)",
+                        "pfn": "//test/$1"
+                    },
+                    {
+                        "chain": "first",
+                        "lfn": "/+.*/mc/(.*)",
+                        "pfn": "//store/nomc/$1"
+                    },
+                    {
+                        "chain": "first",
+                        "lfn": "(.*)/mc/(.*)",
+                        "pfn": "/$1/xmc/$2"
+                    },
+                    {
+                        "chain": "first",
+                        "lfn": "(.*)",
+                        "pfn": "/$1"
+                    }
+                ]
+            },
+            {
+                "protocol": "root",
+                "access": "virtual",
+                "rules": [
+                    {
+                        "chain": "second",
+                        "lfn": "(.*)",
+                        "pfn": "root://host.domain/aaa/bbb$1"
+                    }
+                ]
+            }
+        ]
+    }
+]

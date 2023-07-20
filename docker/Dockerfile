@@ -39,6 +39,8 @@ RUN yum install -y  xrootd \
                     https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-1.9.4-4.el8s.x86_64.rpm  \
                     https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-devel-1.9.4-4.el8s.x86_64.rpm
 
+RUN pip3 install pytest
+
 COPY . .
 
 RUN mkdir -p build

@@ -24,10 +24,7 @@ jobs:
 
       - name: test
         run: |
-          docker run --rm ${{ env.TEST_TAG }} bash -c  '
-            ls
-            cd build && ls
-          '
+          docker run --rm ${{ env.TEST_TAG }} python3 -m pytest
 
 
 

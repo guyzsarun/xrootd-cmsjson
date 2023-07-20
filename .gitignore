@@ -35,3 +35,4 @@
 /build
 /CMakeFiles
 Makefile
+tests/**/*.pyc
