@@ -1,5 +1,7 @@
 # xrootd-cmsjson
 
+[![build](https://github.com/guyzsarun/xrootd-cmsjson/actions/workflows/main.yaml/badge.svg)](https://github.com/guyzsarun/xrootd-cmsjson/actions/workflows/main.yaml)
+
 ## Install jsoncpp
 ```
 git clone https://github.com/open-source-parsers/jsoncpp.git

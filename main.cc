@@ -17,5 +17,6 @@ int main (int, const char** argv)
    eDest.Say("TFC Module");
    XrdCmsJson::PathTranslation *cmsJson = new XrdCmsJson::PathTranslation (&eDest, rf);
    cmsJson->lfn2pfn(lfn, buff, blen);
+   std::cout << buff << std::endl;
    return 0;
 }
