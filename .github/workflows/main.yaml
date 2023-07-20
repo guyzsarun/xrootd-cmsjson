@@ -23,9 +23,14 @@ jobs:
           tags: ${{ env.TEST_TAG }}
 
       - name: test
-        uses: ${{ env.TEST_TAG }}
         run: |
+          docker run --rm ${{ env.TEST_TAG }} bash -c  '
             ls
+            cd build && ls
+          '
+
+
+
 
 
   # build:
