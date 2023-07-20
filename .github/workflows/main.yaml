@@ -53,6 +53,7 @@ jobs:
           context: .
           file: docker/Dockerfile
           tags: ${{ env.LATEST_TAG }}
+          load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
