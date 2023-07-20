@@ -22,9 +22,9 @@ jobs:
           load: true
           tags: ${{ env.TEST_TAG }}
 
-      - name: test
+      - name: Unit test
         run: |
-          docker run --rm ${{ env.TEST_TAG }} python3 -m pytest
+          docker run --rm ${{ env.TEST_TAG }} python3 -m pytest -v
 
 
 
