@@ -21,6 +21,8 @@ jobs:
           file: docker/Dockerfile
           load: true
           tags: ${{ env.TEST_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Unit test
         run: |
@@ -46,6 +48,10 @@ jobs:
         with:
           context: .
           file: docker/Dockerfile
-          push: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/release'
           tags: ${{ env.LATEST_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
+      - name: Push to registry
+        if: always() &&  github.ref == 'refs/heads/master'
+        run: docker push ${{ env.LATEST_TAG }}
