@@ -91,6 +91,7 @@ jobs:
 
   test:
       runs-on: ubuntu-latest
-      container: ${{ env.LATEST_TAG }}
+      needs: build
+      container: user/cmsjson:test
       steps:
         - run: ls
