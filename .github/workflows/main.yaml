@@ -62,42 +62,35 @@ jobs:
   #       run: docker push ${{ env.LATEST_TAG }}
 
 
-  build_tarball:
-    name: Build source archive
+
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Check out Git repository
         uses: actions/checkout@v2
 
-      # - name: Replace version in RPM spec so correct source is downloaded when building RPM
-        # run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ vars.PKG_NAME }}.spec
+      - uses: docker/setup-buildx-action@v1
 
-      - name: Create source archive
-        run: tar -cvf xrootd-cmsjson.tar.gz *
-
-      - name: Upload source archive as artifact
-        uses: actions/upload-artifact@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          name:  xrootd-cmsjson.tar.gz
-          path:  xrootd-cmsjson.tar.gz
+          registry: ghcr.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  build_rpm:
-    name: Build .rpm package
-    needs: build_tarball
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Run rpmbuild on RPM spec to produce package
-        id: rpm
-        uses: naveenrajm7/rpmbuild@master
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
         with:
-          spec_file: spec/xrootd-cmsjson.spec
-          additional_repos: '["libgcc","https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-1.9.4-4.el8s.x86_64.rpm", "https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-devel-1.9.4-4.el8s.x86_64.rpm"]'
+          context: .
+          file: docker/Dockerfile
+          tags: ${{ env.LATEST_TAG }}
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Upload .rpm package as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ vars.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm
-          path: rpmbuild/RPMS/${{ env.ARCH }}/*.rpm
+
+  test:
+      runs-on: ubuntu-latest
+      container: ${{ env.LATEST_TAG }}
+      steps:
+        - run: ls
