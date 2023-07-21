@@ -6,7 +6,7 @@ Summary: CMS JSON plugin for xrootd
 
 Group: System Environment/Daemons
 License: BSD
-URL: https://github.com/bbockelm/xrootd-cmsjson
+URL: https://github.com/guyzsarun/xrootd-cmsjson
 # Generated from:
 # git-archive master | gzip -7 > ~/rpmbuild/SOURCES/xrootd-lcmaps.tar.gz
 Source0: %{name}.tar.gz
