@@ -44,6 +44,7 @@ jobs:
 
       - name: Unit test
         run: |
+          docker load --input /tmp/myimage.tar
           docker run --rm ${{ env.TEST_TAG }} python3 -m pytest -v
 
   test-rpm:
@@ -60,6 +61,7 @@ jobs:
 
       - name: Unit test
         run: |
+          docker load --input /tmp/myimage.tar
           docker run --rm ${{ env.TEST_TAG }} bash -c '
             mkdir -p /root/rpmbuild/SOURCES/ &&
             tar -cvf /root/rpmbuild/SOURCES/xrootd-cmsjson.tar.gz . &&
@@ -81,7 +83,9 @@ jobs:
           path: /tmp
 
       - name: Tag image
-        run: docker tag ${{ env.TEST_TAG }} ${{ env.LATEST_TAG }}
+        run: |
+          docker load --input /tmp/myimage.tar
+          docker tag ${{ env.TEST_TAG }} ${{ env.LATEST_TAG }}
 
       - name: Push to registry
         run: docker push ${{ env.LATEST_TAG }}
