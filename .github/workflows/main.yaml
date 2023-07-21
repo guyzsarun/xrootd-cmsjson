@@ -89,3 +89,21 @@ jobs:
 
       - name: Push to registry
         run: docker push ${{ env.LATEST_TAG }}
+
+  build_tarball:
+    name: Build source archive
+    needs: [test-json,test-rpm]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create source archive
+        run: tar -cvf xrootd-cmsjson.tar.gz *
+
+      - name: Upload source archive as artifact
+        if: always() && github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@v3
+        with:
+          name: xrootd-cmsjson.tar.gz
+          path: xrootd-cmsjson.tar.gz
