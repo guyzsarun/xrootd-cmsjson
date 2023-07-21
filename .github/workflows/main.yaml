@@ -79,19 +79,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: docker/Dockerfile
-          tags: ${{ env.LATEST_TAG }}
-          load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
+        run: docker build -t user/cmsjson:test -f docker/Dockerfile .
 
   test:
       runs-on: ubuntu-latest
       needs: build
-      container: user/cmsjson:test
+      container:
+        image: user/cmsjson:test
       steps:
         - run: ls
