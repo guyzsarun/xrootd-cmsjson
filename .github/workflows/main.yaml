@@ -21,7 +21,7 @@ jobs:
         with:
           context: .
           file: docker/Dockerfile
-          tags: ${{ env.LATEST_TAG }}
+          tags: ${{ env.TEST_TAG }}
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -79,6 +79,7 @@ jobs:
   push-registry:
     runs-on: ubuntu-latest
     needs: [test-json,test-rpm]
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/release'
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
@@ -96,5 +97,4 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Push to registry
-        if: always() &&  github.ref == 'refs/heads/master'
         run: docker push ${{ env.LATEST_TAG }}
