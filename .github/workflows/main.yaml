@@ -80,3 +80,23 @@ jobs:
         with:
           name: xrootd-cmsjson.tar.gz
           path: xrootd-cmsjson.tar.gz
+
+  build_rpm:
+    name: Build .rpm package
+    needs: build_tarball
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run rpmbuild on RPM spec to produce package
+        id: rpm
+        uses: naveenrajm7/rpmbuild@master
+        with:
+          spec_file: spec/xrootd-cmsjson.spec
+
+      - name: Upload .rpm package as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ vars.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm
+          path: rpmbuild/RPMS/${{ env.ARCH }}/*.rpm
