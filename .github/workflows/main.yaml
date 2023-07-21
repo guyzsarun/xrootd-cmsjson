@@ -73,13 +73,13 @@ jobs:
         # run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ vars.PKG_NAME }}.spec
 
       - name: Create source archive
-        run: tar -cvf xrootd-cmsjson-0.0.1.tar.gz *
+        run: tar -cvf xrootd-cmsjson.tar.gz *
 
       - name: Upload source archive as artifact
         uses: actions/upload-artifact@v3
         with:
-          name:  xrootd-cmsjson-0.0.1.tar.gz
-          path:  xrootd-cmsjson-0.0.1.tar.gz
+          name:  xrootd-cmsjson.tar.gz
+          path:  xrootd-cmsjson.tar.gz
 
   build_rpm:
     name: Build .rpm package
