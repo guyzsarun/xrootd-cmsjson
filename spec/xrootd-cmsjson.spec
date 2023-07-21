@@ -1,7 +1,7 @@
 
 Name: xrootd-cmsjson
 Version: 0.0.1
-Release: 3%{?dist}
+Release: 1%{?dist}
 Summary: CMS JSON plugin for xrootd
 
 Group: System Environment/Daemons
