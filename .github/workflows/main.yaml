@@ -78,7 +78,7 @@ jobs:
 
   push-registry:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test-json,test-rpm]
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
