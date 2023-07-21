@@ -94,7 +94,7 @@ jobs:
         uses: naveenrajm7/rpmbuild@master
         with:
           spec_file: spec/xrootd-cmsjson.spec
-          additional_repos: "['centos-release-scl', 'https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-1.9.4-4.el8s.x86_64.rpm', 'https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-devel-1.9.4-4.el8s.x86_64.rpm']"
+          additional_repos: "['https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-1.9.4-4.el8s.x86_64.rpm', 'https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-devel-1.9.4-4.el8s.x86_64.rpm']"
 
       - name: Upload .rpm package as artifact
         uses: actions/upload-artifact@v3
