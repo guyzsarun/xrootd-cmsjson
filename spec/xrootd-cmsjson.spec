@@ -47,4 +47,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/XrdCmsJson.hh
 
 %changelog
-
+* Tue Jul 25 2023 Sarun Nuntaviriyakul <sarun.nuntaviriyakul@cern.ch> - 0.0.1
+- init xrootd-cmsjson package
