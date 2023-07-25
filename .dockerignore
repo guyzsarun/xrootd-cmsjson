@@ -3,3 +3,4 @@ CMakeFiles
 tests/**/*.pyc
 .github
 .pytest_cache
+*.tar.gz
