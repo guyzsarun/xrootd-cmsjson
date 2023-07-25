@@ -53,7 +53,7 @@ jobs:
           docker run --rm ${{ env.TEST_TAG }} python3 -m pytest -v
 
   test-rpm:
-    name: Test RPM package
+    name: Test JSON RPM package
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -81,7 +81,7 @@ jobs:
           '
 
   test-tfc:
-    name: Test RPM package
+    name: Test TFC RPM package
     runs-on: ubuntu-latest
     needs: [test-json,test-rpm]
     steps:

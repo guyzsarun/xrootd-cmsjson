@@ -29,9 +29,11 @@ RUN yum install -y  cmake \
 
 RUN mkdir -p /root/rpmbuild/SOURCES
 RUN wget -O /root/rpmbuild/SOURCES/xrootd-cmstfc.tar.gz  https://github.com/opensciencegrid/xrootd-cmstfc/archive/refs/tags/v1.5.2.tar.gz
-RUN wget -O /root/rpmbuild/SOURCES/xrootd-cmsjson.tar.gz https://github.com/guyzsarun/xrootd-cmsjson/archive/refs/tags/0.0.1.tar.gz
 
 COPY . .
+
+#RUN wget -O /root/rpmbuild/SOURCES/xrootd-cmsjson.tar.gz https://github.com/guyzsarun/xrootd-cmsjson/archive/refs/tags/0.0.1.tar.gz
+RUN tar -czf  /root/rpmbuild/SOURCES/xrootd-cmsjson.tar.gz --transform=s/xrootd/xrootd-cmsjson-0.0.1/ /xrootd/
 
 RUN rpmbuild -bb spec/xrootd-cmstfc.spec
 
