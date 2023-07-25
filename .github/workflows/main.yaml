@@ -50,7 +50,6 @@ jobs:
 
       - name: Unit test
         run: |
-          docker load --input /tmp/myimage.tar
           docker run --rm ${{ env.TEST_TAG }} python3 -m pytest -v
 
   test-rpm:
