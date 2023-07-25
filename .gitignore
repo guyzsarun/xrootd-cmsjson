@@ -36,3 +36,4 @@
 /CMakeFiles
 Makefile
 tests/**/*.pyc
+*.tar.gz
