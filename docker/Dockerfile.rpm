@@ -1,0 +1,38 @@
+FROM almalinux:8
+MAINTAINER Sarun Nuntaviriyakul <sarun.nuntaviriyakul@cern.ch>
+LABEL org.opencontainers.image.source https://github.com/guyzsarun/xrootd-cmsjson
+
+WORKDIR /xrootd
+
+RUN yum -y update && \
+    yum install -y dnf \
+        https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
+        https://repo.opensciencegrid.org/osg/3.6/osg-3.6-el8-release-latest.rpm \
+        epel-release
+
+RUN dnf group install -y "Development Tools"
+
+# CMSTFC dependency
+RUN yum install -y  cmake \
+                    wget \
+                    xrootd \
+                    python3-devel \
+                    python3-xrootd \
+                    xrootd-devel \
+                    pcre-devel \
+                    xerces-c-devel \
+                    xrootd-devel \
+                    https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-1.9.4-4.el8s.x86_64.rpm  \
+                    https://cbs.centos.org/kojifiles/packages/jsoncpp/1.9.4/4.el8s/x86_64/jsoncpp-devel-1.9.4-4.el8s.x86_64.rpm
+
+
+
+RUN mkdir -p /root/rpmbuild/SOURCES
+RUN wget -O /root/rpmbuild/SOURCES/xrootd-cmstfc.tar.gz  https://github.com/opensciencegrid/xrootd-cmstfc/archive/refs/tags/v1.5.2.tar.gz
+RUN wget -O /root/rpmbuild/SOURCES/xrootd-cmsjson.tar.gz https://github.com/guyzsarun/xrootd-cmsjson/archive/refs/tags/0.0.1.tar.gz
+
+COPY . .
+
+RUN rpmbuild -bb spec/xrootd-cmstfc.spec
+
+RUN yum install -y /root/rpmbuild/RPMS/x86_64/xrootd-cmstfc-2.0.0-1.el8.x86_64.rpm
