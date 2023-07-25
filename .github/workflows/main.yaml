@@ -111,7 +111,6 @@ jobs:
 
       - name: Tag image
         run: |
-          docker load --input /tmp/myimage.tar
           docker tag ${{ env.TEST_TAG }} ${{ env.LATEST_TAG }}
 
       - name: Push to registry
