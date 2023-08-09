@@ -1,5 +1,5 @@
 ARG BASE_IMG
-FROM $BASE_IMG
+FROM user/cmsjson:base
 
 MAINTAINER Sarun Nuntaviriyakul <sarun.nuntaviriyakul@cern.ch>
 LABEL org.opencontainers.image.source https://github.com/guyzsarun/xrootd-cmsjson
