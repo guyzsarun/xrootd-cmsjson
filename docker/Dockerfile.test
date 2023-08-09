@@ -1,0 +1,12 @@
+ARG BASE_IMG
+FROM $BASE_IMG
+
+MAINTAINER Sarun Nuntaviriyakul <sarun.nuntaviriyakul@cern.ch>
+LABEL org.opencontainers.image.source https://github.com/guyzsarun/xrootd-cmsjson
+
+RUN pip3 install pytest
+
+COPY . .
+
+RUN mkdir -p build
+RUN cd build && cmake .. && make && make install
