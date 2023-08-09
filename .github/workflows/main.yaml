@@ -33,7 +33,7 @@ jobs:
           context: .
           file: docker/Dockerfile.test
           build-contexts: |
-            BASE_IMG=docker-image://${{ env.BASE_TAG }}
+            base_img=docker-image://${{ env.BASE_TAG }}
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max

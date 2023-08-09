@@ -1,5 +1,5 @@
-ARG BASE_IMG
-FROM BASE_IMG
+ARG base_img
+FROM base_img
 
 MAINTAINER Sarun Nuntaviriyakul <sarun.nuntaviriyakul@cern.ch>
 LABEL org.opencontainers.image.source https://github.com/guyzsarun/xrootd-cmsjson
