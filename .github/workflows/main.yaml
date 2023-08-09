@@ -32,7 +32,8 @@ jobs:
         with:
           context: .
           file: docker/Dockerfile.test
-          build-args: BASE_IMG=${{ env.BASE_TAG }}
+          build-contexts: |
+            BASE_IMG=docker-image://${{ env.BASE_TAG }}
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
