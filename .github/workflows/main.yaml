@@ -26,8 +26,6 @@ jobs:
           file: docker/Dockerfile
           tags: ${{ env.BASE_TAG }}
           load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Build Docker test image
         uses: docker/build-push-action@v4
@@ -36,8 +34,6 @@ jobs:
           file: docker/Dockerfile.test
           build-contexts: |
             base_img=docker-image://${{ env.BASE_TAG }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   # test-json:
   #   name: Test LFN Conversion
